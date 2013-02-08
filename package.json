@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "dependencies": {
       "redis": "latest",
+      "async": "latest",
       "moment": "latest",
       "xml2js": "latest",
       "express": "latest",

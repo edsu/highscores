@@ -1,34 +1,126 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title></title>
-    <link rel="stylesheet" href="/css/style.css">
+    <title>Highscores</title>
+
+    <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+
+    <style>
+
+      body { 
+        background-color: black;
+        color: lime;
+        font-family: "Press Start 2P", courier;
+        font-size: 12pt;
+      }
+
+      a { 
+        color: lime;
+        text-decoration: none;
+      }
+
+      header {
+        font-size: 25pt;
+        text-align: center;
+        width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      hr {
+        color: lime;
+        background-color: lime;
+        height: 5px;
+        border: none;
+      }
+
+      #container {
+        width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      #highscores {
+        float: left;
+        width: 15%;
+        padding: 3px;
+        margin-right: 90px;
+        font-weight: bold;
+        font-size: 14pt;
+      }
+
+      #highscores table {
+        border: thin solid #eeeee;
+      }
+
+      #highscores td {
+        padding: 5px;
+        border-bottom: thin solid lime;
+      }
+
+      #highscores td.score {
+        text-align: right;
+      }
+
+      #recentItems {
+      }
+
+      #recentItems li {
+        list-style-type: none;
+        margin-bottom: 10px;
+        font-size: smaller;
+      }
+
+    </style>
+
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/mustache.js"></script>
 
     <script id="itemTemplate" type="text/x-mustache-template">
-      <li>
-        [{{ created }}]
-        <a href="{{ insturl }}">{{ instname }}</a> 
+      <li class="item">
+        [<a href="{{ insturl }}">{{ instsym }}</a>]
         - 
-        <a href="{{ url }}">{{ title }}</a>
-      </li>
+        <a href="{{ url }}">{{{ title }}}</a>
+        {{{ publisher }}}, 
+        {{ year }}.
+      </ul>
     </script>
 
     <script>
 
     function main() {
       itemTemplate = $("#itemTemplate").html();
+
       var socket = io.connect();
       socket.on('connect', function() {
-        socket.on('item', addItem);
+        socket.on('item', updateRecentItems);
+        socket.on('highscores', updateHighscores);
       });
     }
 
-    function addItem(item) {
-      var html = $(Mustache.render(itemTemplate, item));
-      $('#results').prepend(html);
+    function updateRecentItems(item) {
+      var itemHtml = $(Mustache.render(itemTemplate, item));
+      itemHtml.hide();
+      $('#recentItems ul').prepend(itemHtml);
+      itemHtml.slideDown('medium');
+
+    }
+
+    function updateHighscores(scores) {
+      var table = $("<table>");
+      for (var i = 0; i < scores.length; i += 2) {
+        if (scores[i] == "org:undefined") continue;
+        var org = scores[i].replace("org:", "");
+        table.append('<tr><td class="organization">' + org + '</td><td class="score">' + scores[i + 1] + '</td></tr>')
+      }
+      $("#highscores").html(table);
+
+
+      var old = $('.item').slice(25);
+      old.fadeOut('fast', function() {
+        old.detach(); 
+      });
     }
 
     $(document).ready(main);
@@ -38,7 +130,14 @@
   </head>
 
   <body>
-    <div id="results"></div>
+    <header>
+    ORIGINAL CATALOGING YEAH!!!
+    <hr>
+    </header>
+    <div id="container">
+      <div id="highscores"></div>
+      <div id="recentItems"><ul></ul></div>
+    </div>
   </body>
 
 </html>

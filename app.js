@@ -1,4 +1,5 @@
 var http = require('http'),
+    async = require('async'),
     moment = require('moment'),
     xml2js = require('xml2js'),
     express = require('express'),
@@ -23,12 +24,19 @@ function main() {
   io.sockets.on('connection', function(socket) {
     recent.map(function (item) {
       socket.emit('item', item);
+      getHighscores(function(scores) {
+        socket.emit('highscores', scores);
+      });
     });
   });
 
   worldcat(function(item) {
     io.sockets.emit('item', item);
+    getHighscores(function(scores) {
+      io.sockets.emit('highscores', scores);
+    });
     recent.push(item);
+    recent = recent.slice(0, 40);
   });
 
   server.listen(process.env.PORT || 3000);
@@ -88,13 +96,41 @@ function annotate(item, callback) {
  */
 
 function tally(item) {
-  var org = "org:" + item.instsym;
   var m = moment(item.created);
+  var day = m.format('YYYYMMDD');
 
-  redis.zincrby("daily_" + m.format('YYYYMMDD'), 1, org, function() {});
+  // keep track of the organization
+  var org_id = "org:" + item.instsym;
+  redis.zincrby("items:daily:" + day, 1, org_id, function() {});
+  redis.hset(org_id, "name", item.instname, function() {});
+  redis.hset(org_id, "url", item.url, function() {});
+  redis.hset(org_id, "lat", item.instlat, function() {});
+  redis.hset(org_id, "lon", item.instlong, function() {});
+  redis.zadd(org_id + ":items:" + day, m.unix(), item_id, function() {});
 
-  redis.hset(org, "name", item.instname, function() {});
-  redis.hset(org, "url", item.url, function() {});
+  // keep track of the item
+  var item_id = "item:" + item.oclcno;
+  redis.hset(item_id, "title", item.title, function() {});
+  redis.hset(item_id, "author", item.author, function() {});
+  redis.hset(item_id, "publisher", item.publisher, function() {});
+  redis.hset(item_id, "year", item.year, function() {});
+  redis.hset(item_id, "created", item.created, function() {});
+
+  // keep track of subjects
+  if (item.subject) {
+    redis.sadd(item_id + ":subjects", item.subject.split("|"), function() {});
+    item.subject.split("|").map(function (subject) {
+      redis.zincrby("subjects:daily:" + day, 1, subject, function() {});
+      redis.sadd("subjects:daily:" + subject, item_id, function() {}); 
+    });
+  }
+
+}
+
+function getHighscores(callback) {
+  redis.zrevrangebyscore(["items:daily:20130208", "+inf", 1, "withscores", "limit", 0, 30], function (err, response) {
+    callback(response);
+  });
 }
 
 if (! module.parent) {
