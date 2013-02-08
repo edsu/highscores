@@ -12,11 +12,13 @@
         color: lime;
         font-family: "Press Start 2P", courier;
         font-size: 12pt;
+        text-shadow: 0 0 0.5em lime;
       }
 
       a { 
         color: lime;
         text-decoration: none;
+        text-shadow: 0 0 0.5em lime;
       }
 
       header {
@@ -70,6 +72,18 @@
         margin-bottom: 10px;
         font-size: smaller;
       }
+      
+      #interlace {
+        height:100%;
+        width:100%;
+        position:fixed;
+        left:0;
+        top:0;
+        z-index:1 !important;
+        background-color:black;
+        opacity: 0.05;
+        background-image: url('img/interlace.png');
+      }      
       
       @media only screen and (max-device-width: 480px) {
 
@@ -148,13 +162,14 @@
 
   <body>
     <header>
-    ORIGINAL CATALOGING YEAH!!!
+    ORIGINAL CATALOGING YEAH<em>!!!</em>
     <hr>
     </header>
     <div id="container">
       <div id="highscores"></div>
       <div id="recentItems"><ul></ul></div>
     </div>
+    <div id="interlace">&nbsp;</div>
   </body>
 
 </html>
