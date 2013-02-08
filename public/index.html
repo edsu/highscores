@@ -9,14 +9,16 @@
 
       body { 
         background-color: black;
-        color: lime;
+        color: yellow;
         font-family: "Press Start 2P", courier;
         font-size: 12pt;
+        text-shadow: 0 0 0.5em yellow;
       }
 
       a { 
-        color: lime;
+        color: yellow;
         text-decoration: none;
+        text-shadow: 0 0 0.5em yellow;
       }
 
       header {
@@ -25,13 +27,16 @@
         width: 900px;
         margin-left: auto;
         margin-right: auto;
+        color: white;
+        text-shadow: 0 0 0.5em white;
       }
 
       hr {
-        color: lime;
-        background-color: lime;
+        color: white;
+        background-color: white;
         height: 5px;
         border: none;
+        box-shadow: 0 0 0.5em white;
       }
 
       #container {
@@ -55,14 +60,19 @@
 
       #highscores td {
         padding: 5px;
-        border-bottom: thin solid lime;
+        text-shadow: 0 0 0.5em blue;
+        color: blue;
       }
 
       #highscores td.score {
         text-align: right;
+        color: red;
+        text-shadow: 0 0 0.5em red;
       }
 
       #recentItems {
+        color: yellow;
+        text-shadow: 0 0 0.5 yellow;
       }
 
       #recentItems li {
@@ -70,6 +80,18 @@
         margin-bottom: 10px;
         font-size: smaller;
       }
+      
+      #interlace {
+        height:100%;
+        width:100%;
+        position:fixed;
+        left:0;
+        top:0;
+        z-index:1 !important;
+        background-color:black;
+        opacity: 0.05;
+        background-image: url('img/interlace.png');
+      }      
       
       @media only screen and (max-device-width: 480px) {
 
@@ -148,13 +170,14 @@
 
   <body>
     <header>
-    ORIGINAL CATALOGING YEAH!!!
+    ORIGINAL CATALOGING YEAH<em>!!!</em>
     <hr>
     </header>
     <div id="container">
       <div id="highscores"></div>
       <div id="recentItems"><ul></ul></div>
     </div>
+    <div id="interlace">&nbsp;</div>
   </body>
 
 </html>
