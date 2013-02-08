@@ -2,10 +2,11 @@
     "name": "highscores",
     "version": "0.0.1",
     "dependencies": {
-      "express": "latest",
       "redis": "latest",
+      "moment": "latest",
+      "xml2js": "latest",
+      "express": "latest",
       "request": "latest",
-      "socket.io": "latest",
-      "underscore": "latest"
+      "socket.io": "latest"
     }
 }

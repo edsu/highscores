@@ -9,6 +9,7 @@
 
     <script id="itemTemplate" type="text/x-mustache-template">
       <li>
+        [{{ created }}]
         <a href="{{ insturl }}">{{ instname }}</a> 
         - 
         <a href="{{ url }}">{{ title }}</a>
@@ -27,7 +28,7 @@
 
     function addItem(item) {
       var html = $(Mustache.render(itemTemplate, item));
-      $('#results').append(html);
+      $('#results').prepend(html);
     }
 
     $(document).ready(main);
