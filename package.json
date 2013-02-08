@@ -1,0 +1,11 @@
+{
+    "name": "highscores",
+    "version": "0.0.1",
+    "dependencies": {
+      "express": "latest",
+      "redis": "latest",
+      "request": "latest",
+      "socket.io": "latest",
+      "underscore": "latest"
+    }
+}

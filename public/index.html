@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/mustache.js"></script>
+
+    <script id="itemTemplate" type="text/x-mustache-template">
+      <li>
+        <a href="{{ insturl }}">{{ instname }}</a> 
+        - 
+        <a href="{{ url }}">{{ title }}</a>
+      </li>
+    </script>
+
+    <script>
+
+    function main() {
+      itemTemplate = $("#itemTemplate").html();
+      var socket = io.connect();
+      socket.on('connect', function() {
+        socket.on('item', addItem);
+      });
+    }
+
+    function addItem(item) {
+      var html = $(Mustache.render(itemTemplate, item));
+      $('#results').append(html);
+    }
+
+    $(document).ready(main);
+
+  </script>
+
+  </head>
+
+  <body>
+    <div id="results"></div>
+  </body>
+
+</html>
+
+
