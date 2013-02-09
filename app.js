@@ -119,31 +119,6 @@ function tally(item) {
   redis.hset(org_id, "url", item.url, function() {});
   redis.hset(org_id, "lat", item.instlat, function() {});
   redis.hset(org_id, "lon", item.instlong, function() {});
-
-  /*
-   * commented out for running on heroku w/ free nano sized redis
-  
-  redis.zadd(org_id + ":items:" + day, m.unix(), item_id, function() {});
-
-  // keep track of the item
-  var item_id = "item:" + item.oclcno;
-  redis.hset(item_id, "title", item.title, function() {});
-  redis.hset(item_id, "author", item.author, function() {});
-  redis.hset(item_id, "publisher", item.publisher, function() {});
-  redis.hset(item_id, "year", item.year, function() {});
-  redis.hset(item_id, "created", item.created, function() {});
-
-  // keep track of subjects
-  if (item.subject) {
-    redis.sadd(item_id + ":subjects", item.subject.split("|"), function() {});
-    item.subject.split("|").map(function (subject) {
-      redis.zincrby("subjects:daily:" + day, 1, subject, function() {});
-      redis.sadd("subjects:daily:" + subject, item_id, function() {}); 
-    });
-  }
-
-  */
-
 }
 
 function getHighscores(callback) {
@@ -158,5 +133,3 @@ function getHighscores(callback) {
 if (! module.parent) {
   main();
 }
-
-
