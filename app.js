@@ -128,7 +128,10 @@ function tally(item) {
 }
 
 function getHighscores(callback) {
-  redis.zrevrangebyscore(["items:daily:20130208", "+inf", 1, "withscores", "limit", 0, 30], function (err, response) {
+  var m = moment(new Date());
+  var day = m.format('YYYYMMDD');
+
+  redis.zrevrangebyscore(["items:daily:" + day, "+inf", 2, "withscores", "limit", 0, 30], function (err, response) {
     callback(response);
   });
 }

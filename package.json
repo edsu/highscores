@@ -1,4 +1,8 @@
 {
+    "engines": {
+        "node": "0.8.x",
+        "npm": "1.1.x"
+    },
     "name": "highscores",
     "version": "0.0.1",
     "dependencies": {
