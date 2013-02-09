@@ -25,7 +25,7 @@ function main() {
   var recent = []
 
   // heroku doesn't do websockets yet
-  io.configure('production', function () {
+  io.configure(function () {
     io.set("transports", ["xhr-polling"]); 
     io.set("polling duration", 10); 
   });
