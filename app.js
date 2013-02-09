@@ -4,8 +4,15 @@ var http = require('http'),
     xml2js = require('xml2js'),
     express = require('express'),
     request = require('request'),
-    socketio = require('socket.io'),
-    redis = require('redis').createClient();
+    socketio = require('socket.io');
+
+if (process.env.REDISTOGO_URL) {
+  var rtg   = require("url").parse(process.env.REDISTOGO_URL);
+  var redis = require("redis").createClient(rtg.port, rtg.hostname);
+  redis.auth(rtg.auth.split(":")[1]); 
+} else {
+  var redis = require('redis').createClient();
+}
 
 /**
  * Set up the webserver.
@@ -106,6 +113,10 @@ function tally(item) {
   redis.hset(org_id, "url", item.url, function() {});
   redis.hset(org_id, "lat", item.instlat, function() {});
   redis.hset(org_id, "lon", item.instlong, function() {});
+
+  /*
+   * commented out for running on heroku w/ free nano sized redis
+  
   redis.zadd(org_id + ":items:" + day, m.unix(), item_id, function() {});
 
   // keep track of the item
@@ -124,6 +135,8 @@ function tally(item) {
       redis.sadd("subjects:daily:" + subject, item_id, function() {}); 
     });
   }
+
+  */
 
 }
 
