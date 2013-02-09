@@ -24,6 +24,12 @@ function main() {
   var io = socketio.listen(server);
   var recent = []
 
+  // heroku doesn't do websockets yet
+  io.configure('production', function () {
+    io.set("transports", ["xhr-polling"]); 
+    io.set("polling duration", 10); 
+  });
+
   app.configure(function() {
     app.use(express.static(__dirname + '/public'));
   });
