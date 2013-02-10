@@ -141,10 +141,10 @@
     }
 
     function updateRecentItems(item) {
-      var itemHtml = Mustache.render(itemTemplate, item);
-      //itemHtml.hide();
+      var itemHtml = $(Mustache.render(itemTemplate, item));
+      itemHtml.hide();
       $('#recentItems ul').prepend(itemHtml);
-      //itemHtml.slideDown('medium');
+      itemHtml.slideDown('medium');
     }
 
     function updateHighscores(scores) {
