@@ -140,7 +140,7 @@ function getHighscores(callback) {
 
 /**
  * Annotates highscores with the organization names, using the org id.
- * The lookups happen in paralle.
+ * The lookups happen in parallel.
  */
 
 function addOrgNamesToScores(highscores, callback) {

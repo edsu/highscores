@@ -18,6 +18,12 @@ To get it running you will need to:
 * node app.js
 * open http://localhost:3000/ in your browser
 
+The included Procfile should allow you to easily deploy to Heroku if you want.
+You will just need to enable the free Redis database, which should be big enough
+for keeping track of daily counts.
+
+    heroku addons:add redistogo
+
 Authors
 -------
 
@@ -28,4 +34,3 @@ License
 -------
 
 * CC0
-
