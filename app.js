@@ -121,12 +121,44 @@ function tally(item) {
   redis.hset(org_id, "lon", item.instlong, function() {});
 }
 
+/**
+ * Will get the top 30 catalogers for the day, and return them as a list
+ * of objects, each with a name and score.
+ */
+
 function getHighscores(callback) {
   var m = moment(new Date());
   var day = m.format('YYYYMMDD');
-
   redis.zrevrangebyscore(["items:daily:" + day, "+inf", 2, "withscores", "limit", 0, 30], function (err, response) {
-    callback(response);
+    var highscores = [];
+    for (var i=0; i < response.length; i += 2) {
+      var symbol = response[i].replace('org:', '')
+      var score = {id: response[i], score: response[i+1], symbol: symbol}
+      highscores.push(score);
+    }
+    addOrgNamesToScores(highscores, callback);
+  });
+}
+
+/**
+ * Annotates highscores with the organization names, using the org id.
+ * The lookups happen in paralle.
+ */
+
+function addOrgNamesToScores(highscores, callback) {
+  async.map(highscores, addOrgNameToScore, function(err, results) {
+    callback(results);
+  });
+}
+
+/**
+ * Looks up an individual orgnization name using the organization id.
+ */
+
+function addOrgNameToScore(score, callback) {
+  redis.hget(score.id, "name", function(e, r) {
+    score.name = r
+    callback(null, score);
   });
 }
 

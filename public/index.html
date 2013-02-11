@@ -121,7 +121,7 @@
 
     <script id="itemTemplate" type="text/x-mustache-template">
       <li class="item">
-        [<a href="{{ insturl }}">{{ instsym }}</a>]
+        [<a href="{{ insturl }}" title="{{ instname }}">{{ instsym }}</a>]
         - 
         <a href="{{ url }}">{{{ title }}}</a>
         {{{ publisher }}}, 
@@ -129,10 +129,21 @@
       </li>
     </script>
 
+    <script id="scoreTemplate" type="text/x-mustache-template">
+      <tr>
+        <td class="organization">
+          <span title="{{ name }}">{{ symbol }}</span>
+        </td>
+        <td class="score">{{ score }}</td>
+      </tr>
+    </script>
+
     <script>
 
     function main() {
       itemTemplate = $("#itemTemplate").html();
+      scoreTemplate = $("#scoreTemplate").html();
+
 
       var socket = io.connect();
       socket.on('connect', function() {
@@ -150,13 +161,11 @@
 
     function updateHighscores(scores) {
       var table = $("<table>");
-      for (var i = 0; i < scores.length; i += 2) {
-        if (scores[i] == "org:undefined") continue;
-        var org = scores[i].replace("org:", "");
-        table.append('<tr><td class="organization">' + org + '</td><td class="score">' + scores[i + 1] + '</td></tr>')
+      for (var i = 0; i < scores.length; i += 1) {
+        if (scores[i].symbol == "undefined") continue;
+        table.append(Mustache.render(scoreTemplate, scores[i]));
       }
       $("#highscores").html(table);
-
 
       var old = $('.item').slice(15);
       old.fadeOut('fast', function() {
@@ -186,5 +195,3 @@
   </body>
 
 </html>
-
-
