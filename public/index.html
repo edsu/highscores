@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>ORIGINAL CATALOGING YEAH!!!</title>
+    <title>ORIGINAL CATALOGING!!!</title>
 
     <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
 
@@ -22,7 +22,7 @@
       }
 
       header {
-        font-size: 22pt;
+        font-size: 26pt;
         text-align: center;
         width: 900px;
         margin-left: auto;
@@ -144,12 +144,44 @@
       itemTemplate = $("#itemTemplate").html();
       scoreTemplate = $("#scoreTemplate").html();
 
-
       var socket = io.connect();
       socket.on('connect', function() {
-        socket.on('item', updateRecentItems);
-        socket.on('highscores', updateHighscores);
+        socket.on('update', queueUpdate);
       });
+
+      doUpdates(1500);
+    }
+
+    // Since the server is polling worldcat every 10 seconds we tend 
+    // to get updates in batches every 10 seconds.  In order to make the
+    // results seem smoother, we had them to a queue and the periodically
+    // look for results to display, rather than displaying them all at once.
+
+    var updates = [];
+
+    function queueUpdate(update) {
+      updates.push(update);
+      console.log("update queue size: " + updates.length);
+    }
+
+    function doUpdates(millisBetweenUpdates) {
+      var update = updates.shift();
+      console.log("update queue size: " + updates.length);
+      if (update) {
+        updateRecentItems(update.item);
+        updateHighscores(update.scores);
+      }
+  
+      // figure out how long to wait till next update based on the queue size
+
+      if (updates.length > 0) {
+        var damping = Math.random() * 600;
+        var millis = millisBetweenUpdates / Math.sqrt(updates.length) + damping;
+      } else {
+        var millis = millisBetweenUpdates;
+      }
+      console.log("waiting " + millis);
+      setTimeout(doUpdates, millis, millisBetweenUpdates);
     }
 
     function updateRecentItems(item) {
@@ -184,11 +216,12 @@
     <a href="http://github.com/edsu/highscores"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub" /></a> 
 
     <header>
-    ORIGINAL CATALOGING YEAH<em>!!!</em>
+    ORIGINAL CATALOGING<em>!!!</em>
     <hr>
     </header>
     <div id="container">
-      <div id="highscores"></div>
+      <div id="highscores">
+      </div>
       <div id="recentItems"><ul></ul></div>
     </div>
     <div id="interlace">&nbsp;</div>

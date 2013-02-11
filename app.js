@@ -35,21 +35,19 @@ function main() {
   });
 
   io.sockets.on('connection', function(socket) {
-    recent.map(function (item) {
-      socket.emit('item', item);
-      getHighscores(function(scores) {
-        socket.emit('highscores', scores);
-      });
+    recent.map(function (update) {
+      socket.emit('update', update);
     });
   });
 
   worldcat(function(item) {
     io.sockets.emit('item', item);
     getHighscores(function(scores) {
-      io.sockets.emit('highscores', scores);
+      var update = {item: item, scores: scores};
+      io.sockets.emit('update', update);
+      recent.push(update);
+      recent = recent.slice(0, 40);
     });
-    recent.push(item);
-    recent = recent.slice(0, 40);
   });
 
   server.listen(process.env.PORT || 3000);
