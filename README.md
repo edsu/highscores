@@ -3,8 +3,8 @@ highscores
 
 highscores is a NodeJS application that listens to the 
 [Worldcat Live API](http://experimental.worldcat.org/xwwg/) 
-to display original [cataloging](http://en.wikipedia.org/wiki/Cataloging) 
-"highscores" for the day in realtime on the Web. 
+to display [cataloging](http://en.wikipedia.org/wiki/Cataloging) 
+"highscores" for the day, in realtime, on the Web. 
 
 Install
 -------
