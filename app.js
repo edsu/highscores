@@ -68,6 +68,10 @@ function worldcat(callback, maxseq) {
     if (e) {
       console.log("unable to fetch " + url + ": " + e);
     }
+    if (! results) {
+      console.log("results are null when fetching " + url);
+      results = [];
+    }
     results.newrec.map(function (item) {
       annotate(item, callback);
     });
