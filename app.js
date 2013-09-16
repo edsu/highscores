@@ -72,6 +72,7 @@ function worldcat(callback, maxseq) {
       console.log("results are null when fetching " + url);
       results = [];
     }
+    console.log(results);
     results.newrec.map(function (item) {
       annotate(item, callback);
     });
