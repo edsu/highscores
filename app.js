@@ -72,10 +72,13 @@ function worldcat(callback, maxseq) {
       console.log("results are null when fetching " + url);
       results = [];
     }
-    console.log(results);
-    results.newrec.map(function (item) {
-      annotate(item, callback);
-    });
+    if (results.newrec and results.newrec.length > 0) {
+      results.newrec.map(function (item) {
+        annotate(item, callback);
+      });
+    } else {
+      console.log("results.newrec is not defined or is empty: " + results.newrec);
+    }
     setTimeout(function() {
       worldcat(callback, results.maxseq);
     }, 10000);
