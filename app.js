@@ -65,6 +65,7 @@ function worldcat(callback, maxseq) {
 
   console.log(url);
   request.get({url: url, json: true}, function (e, r, results) {
+    console.log(results);
     if (e) {
       console.log("unable to fetch " + url + ": " + e);
     }
